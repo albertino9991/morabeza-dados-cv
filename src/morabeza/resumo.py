@@ -72,6 +72,3 @@ def main() -> None:
     for mes, valor in por_mes.items():
         print(f"  - {mes}: {formatar_cve(valor)}")
 
-
-if __name__ == "__main__":
-    main()
