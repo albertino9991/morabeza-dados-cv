@@ -42,3 +42,36 @@ def faturacao_por_ilha(vendas: list[dict]) -> dict:
 def ilha_top(por_ilha: dict) -> str:
     """Devolve o nome da ilha com maior faturação."""
     return max(por_ilha, key=por_ilha.get)
+def faturacao_mensal(vendas: list[dict]) -> dict:
+    """Devolve um dicionário {'AAAA-MM': faturacao} ordenado por mês."""
+    por_mes = {}
+    for venda in vendas:
+        mes = venda["data"][:7]
+        valor = total_venda(venda)
+        por_mes[mes] = por_mes.get(mes, 0) + valor
+    return dict(sorted(por_mes.items()))
+def formatar_cve(valor: int) -> str:
+    """Formata um valor inteiro com espaços nos milhares e sufixo CVE."""
+    formatado = f"{valor:,}".replace(",", " ")
+    return f"{formatado} CVE"
+def main() -> None:
+    caminho = sys.argv[1] if len(sys.argv) > 1 else "data/vendas_amostra.csv"
+    vendas = ler_vendas(caminho)
+    total = faturacao_total(vendas)
+    por_ilha = faturacao_por_ilha(vendas)
+    por_mes = faturacao_mensal(vendas)
+    top = ilha_top(por_ilha)
+
+    print(f"Total de vendas: {len(vendas)}")
+    print(f"Faturação total: {formatar_cve(total)}")
+    print(f"Ilha com maior faturação: {top}")
+    print("\nFaturação por ilha:")
+    for ilha, valor in por_ilha.items():
+        print(f"  - {ilha}: {formatar_cve(valor)}")
+    print("\nFaturação por mês:")
+    for mes, valor in por_mes.items():
+        print(f"  - {mes}: {formatar_cve(valor)}")
+
+
+if __name__ == "__main__":
+    main()
